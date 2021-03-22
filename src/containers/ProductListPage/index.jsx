@@ -15,7 +15,6 @@ const ProductListPage = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(props);
     const { slug } = props.match.params;
     dispatch(getProductBySlug(slug));
   }, []);
