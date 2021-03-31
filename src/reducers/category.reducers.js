@@ -45,9 +45,7 @@ const buildNewCategories = (parentId, categories, category) => {
     } else {
       myCategories.push({
         ...cat,
-        children: cat.children
-          ? buildNewCategories(parentId, cat.children, category)
-          : [],
+        children: cat.children ? buildNewCategories(parentId, cat.children, category) : [],
       });
     }
   }
@@ -56,7 +54,6 @@ const buildNewCategories = (parentId, categories, category) => {
 };
 
 export default (state = initState, action) => {
-  console.log(action);
   switch (action.type) {
     case categoryContants.GET_ALL_CATEGORIES_SUCCESS:
       state = { ...state, categories: action.payload.categories };
@@ -66,12 +63,7 @@ export default (state = initState, action) => {
       break;
     case categoryContants.ADD_NEW_CATEGORY_SUCCESS:
       const category = action.payload.category;
-      const updateCategories = buildNewCategories(
-        category.parentId,
-        state.categories,
-        category
-      );
-      console.log(updateCategories);
+      const updateCategories = buildNewCategories(category.parentId, state.categories, category);
 
       state = {
         ...state,
