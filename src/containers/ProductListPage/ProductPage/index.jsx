@@ -21,7 +21,7 @@ const ProductPage = (props) => {
   return (
     <>
       <h3>{page.title}</h3>
-      <Carousel renderThumbs={() => {}}>
+      <Carousel renderThumbs={() => {}} style={{ maxWidth: "100%", height: "auto" }}>
         {page.banners &&
           page.banners.map((banner, index) => {
             return (
@@ -32,7 +32,7 @@ const ProductPage = (props) => {
             );
           })}
       </Carousel>
-      <div style={{ display: "flex" }}>
+      <div>
         {page.products &&
           page.products.map((product, index) => {
             return (

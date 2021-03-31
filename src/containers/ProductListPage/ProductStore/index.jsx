@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductBySlug } from "../../../actions";
 import { generatePublicUrl } from "../../../urlConfig";
-import "./style.css";
 
 const ProductStore = (props) => {
   const product = useSelector((state) => state.product);
