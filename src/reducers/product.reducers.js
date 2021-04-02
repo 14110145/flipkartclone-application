@@ -7,6 +7,7 @@ const initState = {
     under1k: [],
     under2k: [],
   },
+  productDetails: {},
   pageRequest: false,
   page: {},
   error: null,
@@ -39,6 +40,26 @@ export default (state = initState, action) => {
         ...state,
         pageRequest: false,
         error: action.payload.error,
+      };
+      break;
+    case productsConstants.GET_PRODUCTS_DETAILS_BY_ID_REQUEST:
+      state = {
+        ...state,
+        loading: true,
+      };
+      break;
+    case productsConstants.GET_PRODUCTS_DETAILS_BY_ID_SUCCESS:
+      state = {
+        ...state,
+        productDetails: action.payload.productDetails,
+        loading: false,
+      };
+      break;
+    case productsConstants.GET_PRODUCTS_DETAILS_BY_ID_FAILURE:
+      state = {
+        ...state,
+        error: action.payload.error,
+        loading: false,
       };
       break;
   }

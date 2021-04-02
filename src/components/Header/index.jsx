@@ -20,14 +20,15 @@ const Header = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // if (auth.authenticate) {
-    // }
+    if (auth.authenticate) {
+      setLoginModal(false);
+    }
   }, [auth.authenticate]);
 
   const renderLoggedInMenu = () => {
     return (
       <DropdownMenu
-        menu={<a>{auth.user.fullName}</a>}
+        menu={<a className="fullName">{auth.user.fullName}</a>}
         menus={[
           { label: "My Profile", href: "", icon: null },
           { label: "SuperCoin Zone", href: "", icon: null },
@@ -41,12 +42,6 @@ const Header = (props) => {
           { label: "Gift Cards", href: "", icon: null },
           { label: "Logout", href: "", icon: null },
         ]}
-        firstMenu={
-          <div className="firstmenu">
-            <span>New Customer?</span>
-            <a style={{ color: "#2874f0" }}>Sign Up</a>
-          </div>
-        }
       />
     );
   };
