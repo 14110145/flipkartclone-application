@@ -27,6 +27,7 @@
 .exploreText {
   font-size: 10px;
   font-style: italic;
+  color: #fff;
 }
 .plusText {
   font-size: 10px;
@@ -81,7 +82,8 @@
   font-size: 16px;
   cursor: pointer;
 }
-.more {
+.more,
+.fullName {
   font-weight: bold;
   color: #fff;
   display: flex;
@@ -133,4 +135,11 @@
   flex: 1;
   flex-direction: column;
   align-items: center;
+}
+
+.loginInputContainer {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 30px;
+  margin: 40px 0;
 }

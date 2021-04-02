@@ -4,6 +4,8 @@ import flipkartLogo from "../../images/logo/flipkart.png";
 import goldenStar from "../../images/logo/golden-star.png";
 import { IoIosArrowDown, IoIosCart, IoIosSearch } from "react-icons/io";
 import { Modal, MaterialInput, MaterialButton, DropdownMenu } from "../MaterialUI";
+import { useDispatch } from "react-redux";
+import { login } from "../../actions/auth.actions";
 
 /**
  * @author
@@ -14,9 +16,15 @@ const Header = (props) => {
   const [loginModal, setLoginModal] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
+  const userLogin = () => {
+    dispatch(login({ email, password }));
+  };
 
   return (
     <div className="header">
+      {/* Modal Login */}
       <Modal visible={loginModal} onClose={() => setLoginModal(false)}>
         <div className="authContainer">
           <div className="row">
@@ -31,7 +39,6 @@ const Header = (props) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-
               <MaterialInput
                 type="password"
                 label="Enter Password"
@@ -39,12 +46,27 @@ const Header = (props) => {
                 onChange={(e) => setPassword(e.target.value)}
                 rightElement={<a href="#">Forgot?</a>}
               />
-              <MaterialButton title="Login" bgColor="#fb641b" textColor="#ffffff" />
+              <MaterialButton
+                title="Login"
+                bgColor="#fb641b"
+                textColor="#ffffff"
+                style={{ margin: "20px 0" }}
+                onClick={userLogin}
+              />
+              OR
+              <MaterialButton
+                title="Create Account"
+                bgColor="#fb641b"
+                textColor="#ffffff"
+                style={{ marginTop: "20px" }}
+              />
             </div>
           </div>
         </div>
       </Modal>
+
       <div className="subHeader">
+        {/* Logo */}
         <div className="logo">
           <a href="">
             <img src={flipkartLogo} className="logoimage" alt="" />
@@ -55,6 +77,8 @@ const Header = (props) => {
             <img src={goldenStar} className="goldenStar" alt="" />
           </a>
         </div>
+
+        {/* Search component */}
         <div
           style={{
             padding: "0 10px",
@@ -71,6 +95,8 @@ const Header = (props) => {
             </div>
           </div>
         </div>
+
+        {/* Right side menu */}
         <div className="rightMenu">
           <DropdownMenu
             menu={
