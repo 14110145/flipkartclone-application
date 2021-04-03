@@ -69,6 +69,7 @@ const MaterialButton = (props) => {
         style={{ backgroundColor: props.bgColor, color: props.textColor }}
         onClick={onClick}
       >
+        {props.icon && props.icon}
         {props.title && props.title}
       </button>
     </div>
@@ -86,7 +87,15 @@ const DropdownMenu = (props) => {
           {props.menus &&
             props.menus.map((item, index) => (
               <li key={index}>
-                <a href={item.href}>{item.label}</a>
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    item.onClick && item.onClick();
+                  }}
+                  href={item.href}
+                >
+                  {item.label}
+                </a>
               </li>
             ))}
         </ul>

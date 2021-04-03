@@ -5,7 +5,7 @@ import goldenStar from "../../images/logo/golden-star.png";
 import { IoIosArrowDown, IoIosCart, IoIosSearch } from "react-icons/io";
 import { Modal, MaterialInput, MaterialButton, DropdownMenu } from "../MaterialUI";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../actions/auth.actions";
+import { login, signout } from "../../actions/auth.actions";
 
 /**
  * @author
@@ -25,6 +25,14 @@ const Header = (props) => {
     }
   }, [auth.authenticate]);
 
+  const userLogin = () => {
+    dispatch(login({ email, password }));
+  };
+
+  const logout = () => {
+    dispatch(signout());
+  };
+
   const renderLoggedInMenu = () => {
     return (
       <DropdownMenu
@@ -40,7 +48,7 @@ const Header = (props) => {
           { label: "Rewards", href: "", icon: null },
           { label: "Notifications", href: "", icon: null },
           { label: "Gift Cards", href: "", icon: null },
-          { label: "Logout", href: "", icon: null },
+          { label: "Logout", href: "", icon: null, onClick: logout },
         ]}
       />
     );
@@ -70,10 +78,6 @@ const Header = (props) => {
         }
       />
     );
-  };
-
-  const userLogin = () => {
-    dispatch(login({ email, password }));
   };
 
   return (
