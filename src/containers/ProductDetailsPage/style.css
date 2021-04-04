@@ -21,10 +21,11 @@
   object-fit: contain;
 }
 .thumbnail.active {
-  border: 2px solid #2874f0;
+  border: 1px solid #2874f0;
 }
 .productDescContainer {
   width: 485px;
+  height: auto;
 }
 .productDescImgContainer {
   width: 485px;

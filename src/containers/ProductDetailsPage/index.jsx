@@ -12,7 +12,6 @@ import "./style.css";
 const ProductDetailsPage = (props) => {
   const dispatch = useDispatch();
   const { productDetails } = useSelector((state) => state.product);
-  console.log({ productDetails });
   useEffect(() => {
     const { productId } = props.match.params;
     const payload = {
@@ -27,7 +26,6 @@ const ProductDetailsPage = (props) => {
   }
   return (
     <Layout>
-      {/* <div>{product.productDetails.name}</div> */}
       <div className="productDescriptionContainer">
         <div className="flexRow">
           <div className="verticalImageStack">
