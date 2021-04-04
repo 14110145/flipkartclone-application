@@ -7,6 +7,7 @@ import { BiRupee } from "react-icons/bi";
 import { AiFillThunderbolt } from "react-icons/ai";
 import { MaterialButton } from "../../components/MaterialUI";
 import { generatePublicUrl } from "../../urlConfig";
+import { addToCart } from "../../actions";
 import "./style.css";
 
 const ProductDetailsPage = (props) => {
@@ -59,6 +60,12 @@ const ProductDetailsPage = (props) => {
                   marginRight: "5px",
                 }}
                 icon={<IoMdCart />}
+                onClick={() => {
+                  const { _id, name, price } = productDetails;
+                  const img = productDetails.productPictures[0].img;
+                  dispatch(addToCart({ _id, name, price }));
+                  props.history.push("/cart");
+                }}
               />
               <MaterialButton
                 title="BUY NOW"
