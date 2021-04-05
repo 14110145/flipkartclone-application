@@ -27,11 +27,12 @@ const ProductStore = (props) => {
             headerLeft={`${props.match.params.slug} mobile under ${priceRange[key]}`}
             headerRight={<button>View all</button>}
             style={{ width: "calc(100% - 40px)", margin: "20px" }}
+            key={index}
           >
             <div style={{ display: "flex" }}>
-              {product.productsByPrice[key].map((product) => {
+              {product.productsByPrice[key].map((product, index) => {
                 return (
-                  <Link to={`/${product.slug}/${product._id}/p`} className="productContainer">
+                  <Link key={index} to={`/${product.slug}/${product._id}/p`} className="productContainer">
                     <div className="productImgContainer">
                       <img src={generatePublicUrl(product.productPictures[0].img)} alt="" />
                     </div>

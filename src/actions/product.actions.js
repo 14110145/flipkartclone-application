@@ -46,7 +46,6 @@ export const getProductDetailsById = (payload) => {
       dispatch({ type: productsConstants.GET_PRODUCTS_DETAILS_BY_ID_REQUEST });
       const { productId } = payload.params;
       res = await axiosIntance.get(`/product/${productId}`);
-      console.log({ res });
       dispatch({
         type: productsConstants.GET_PRODUCTS_DETAILS_BY_ID_SUCCESS,
         payload: { productDetails: res.data.product },

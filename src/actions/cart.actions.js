@@ -38,12 +38,6 @@ export const addToCart = (product, newQty = 1) => {
     if (auth.authenticate) {
       dispatch({ type: cartConstants.ADD_TO_CART_REQUEST });
       const payload = {
-        // cartItems: Object.keys(cartItems).map((key, index) => {
-        //     return {
-        //         quantity: cartItems[key].qty,
-        //         product: cartItems[key]._id
-        //     }
-        // })
         cartItems: [
           {
             product: product._id,

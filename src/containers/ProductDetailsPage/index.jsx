@@ -31,16 +31,10 @@ const ProductDetailsPage = (props) => {
         <div className="flexRow">
           <div className="verticalImageStack">
             {productDetails.productPictures.map((thumb, index) => (
-              <div className="thumbnail">
+              <div className="thumbnail" key={index}>
                 <img src={generatePublicUrl(thumb.img)} alt={thumb.img} />
               </div>
             ))}
-            {/* <div className="thumbnail active">
-            {
-              product.productDetails.productPictures.map((thumb, index) => 
-              <img src={generatePublicUrl(thumb.img)} alt={thumb.img} />)
-            }
-          </div> */}
           </div>
           <div className="productDescContainer">
             <div className="productDescImgContainer">
@@ -63,7 +57,7 @@ const ProductDetailsPage = (props) => {
                 onClick={() => {
                   const { _id, name, price } = productDetails;
                   const img = productDetails.productPictures[0].img;
-                  dispatch(addToCart({ _id, name, price }));
+                  dispatch(addToCart({ _id, name, price, img }));
                   props.history.push("/cart");
                 }}
               />
