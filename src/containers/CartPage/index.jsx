@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../../actions";
+import { addToCart, getCartItems } from "../../actions";
 import Card from "../../components/UI/Card";
 import Layout from "../Layout";
 import CartItem from "./CartItem";
@@ -10,11 +10,18 @@ const CartPage = (props) => {
   const dispatch = useDispatch();
 
   const cart = useSelector((state) => state.cart);
+  const auth = useSelector((state) => state.auth);
   const [cartItems, setCartItems] = useState(cart.cartItems);
 
   useEffect(() => {
     setCartItems(cart.cartItems);
   }, [cart.cartItems]);
+
+  useEffect(() => {
+    if (auth.authenticate) {
+      dispatch(getCartItems());
+    }
+  }, [auth.authenticate]);
 
   const onQuantityInc = (_id, qty) => {
     const { name, price, img } = cartItems[_id];
