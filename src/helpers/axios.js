@@ -11,7 +11,7 @@ const axiosIntance = axios.create({
   },
 });
 
-axiosIntance.interceptors.request((req) => {
+axiosIntance.interceptors.request.use((req) => {
   const { auth } = store.getState();
   if (auth.token) {
     req.headers.Authorization = `Bear ${auth.token}`;
