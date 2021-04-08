@@ -6,6 +6,7 @@ import { IoIosArrowDown, IoIosCart, IoIosSearch } from "react-icons/io";
 import { Modal, MaterialInput, MaterialButton, DropdownMenu } from "../MaterialUI";
 import { useDispatch, useSelector } from "react-redux";
 import { login, signout } from "../../actions/auth.actions";
+import { Link } from "react-router-dom";
 
 /**
  * @author
@@ -91,33 +92,35 @@ const Header = (props) => {
               <p>Get access to your Orders, Wishlist and Recommendations</p>
             </div>
             <div className="rightspace">
-              <MaterialInput
-                type="text"
-                label="Enter Email/Enter Mobile Number"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <MaterialInput
-                type="password"
-                label="Enter Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                rightElement={<a href="#">Forgot?</a>}
-              />
-              <MaterialButton
-                title="Login"
-                bgColor="#fb641b"
-                textColor="#ffffff"
-                style={{ margin: "20px 0" }}
-                onClick={userLogin}
-              />
-              OR
-              <MaterialButton
-                title="Create Account"
-                bgColor="#fb641b"
-                textColor="#ffffff"
-                style={{ marginTop: "20px" }}
-              />
+              <div className="loginInputContainer">
+                <MaterialInput
+                  type="text"
+                  label="Enter Email/Enter Mobile Number"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <MaterialInput
+                  type="password"
+                  label="Enter Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  rightElement={<a href="#">Forgot?</a>}
+                />
+                <MaterialButton
+                  title="Login"
+                  bgColor="#fb641b"
+                  textColor="#ffffff"
+                  style={{ margin: "20px 0" }}
+                  onClick={userLogin}
+                />
+                <p style={{ textAlign: "center" }}>OR</p>
+                <MaterialButton
+                  title="Create Account"
+                  bgColor="#fb641b"
+                  textColor="#ffffff"
+                  style={{ marginTop: "20px" }}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -173,10 +176,10 @@ const Header = (props) => {
             ]}
           />
           <div>
-            <a className="cart">
+            <Link to="/cart" className="cart">
               <IoIosCart />
               <span style={{ margin: "0 10px" }}>Cart</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
