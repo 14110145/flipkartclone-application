@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { addAddress } from "../../actions";
 import { MaterialButton, MaterialInput } from "../../components/MaterialUI";
 
@@ -14,12 +14,24 @@ const AddressForm = (props) => {
   const [landmark, setLandmark] = useState("");
   const [alternatePhone, setAlternatePhone] = useState("");
   const [addressType, setAddressType] = useState("");
+  const [submitFlag, setSubmitFlag] = useState(false);
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user);
 
   const inputContainer = {
     width: "100%",
     marginRight: 10,
   };
+
+  useEffect(() => {
+    console.log("addressCount:", user.addAddress);
+    if (submitFlag) {
+      console.log("where are we", user);
+      const address = user.adddress.slice(user.address.length - 1)[0];
+      props.onSubmitForm(address);
+    }
+  }, [user.address]);
 
   const onAddressSubmit = (e) => {
     const payload = {
@@ -38,23 +50,12 @@ const AddressForm = (props) => {
     };
     console.log(payload);
     dispatch(addAddress(payload));
+    setSubmitFlag(true);
   };
 
-  return (
-    <div className="checkoutStep" style={{ background: "#f5faff" }}>
-      <div className={`checkoutHeader`}>
-        <div>
-          <span className="stepNumber">+</span>
-          <span className="stepTitle">{"ADD NEW ADDRESS"}</span>
-        </div>
-      </div>
-      <div
-        style={{
-          padding: "0 60px",
-          paddingBottom: "20px",
-          boxSizing: "border-box",
-        }}
-      >
+  const renderAddressForm = () => {
+    return (
+      <>
         <div className="flexRow">
           <div style={inputContainer}>
             <MaterialInput label="Name" value={name} onChange={(e) => setName(e.target.value)} />
@@ -128,6 +129,30 @@ const AddressForm = (props) => {
             }}
           />
         </div>
+      </>
+    );
+  };
+
+  if (props.withoutLayout) {
+    return <div>{renderAddressForm()}</div>;
+  }
+
+  return (
+    <div className="checkoutStep" style={{ background: "#f5faff" }}>
+      <div className={`checkoutHeader`}>
+        <div>
+          <span className="stepNumber">+</span>
+          <span className="stepTitle">{"ADD NEW ADDRESS"}</span>
+        </div>
+      </div>
+      <div
+        style={{
+          padding: "0 60px",
+          paddingBottom: "20px",
+          boxSizing: "border-box",
+        }}
+      >
+        {renderAddressForm()}
       </div>
     </div>
   );

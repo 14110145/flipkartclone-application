@@ -4,7 +4,6 @@ import "./style.css";
 
 const CartItem = (props) => {
   const [qty, setQty] = useState(props.cartItems.qty);
-  console.log({ qty });
   const { _id, name, price, img } = props.cartItems;
   const onQuantityIncSet = () => {
     props.onQuantityInc(_id, qty + 1);
