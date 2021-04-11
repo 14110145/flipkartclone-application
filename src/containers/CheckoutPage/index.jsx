@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAddress } from "../../actions";
+import { getAddress, getCartItems } from "../../actions";
 import Layout from "../Layout";
 import { Anchor, MaterialButton, MaterialInput } from "../../components/MaterialUI";
 import Card from "../../components/UI/Card";
 import AddressForm from "./AddressForm";
 import "./style.css";
+import PriceDetails from "../../components/PriceDetails";
+import CartPage from "../CartPage";
 
 const CheckoutStep = (props) => {
   return (
@@ -21,14 +23,64 @@ const CheckoutStep = (props) => {
   );
 };
 
+const Address = ({ adr, selectAddress, enableAddressEditForm, confirmDeliveryAddress, onAddressSubmit }) => {
+  return (
+    <div className="flexRow addressContainer">
+      <div>
+        <input name="address" onClick={() => selectAddress(adr)} type="radio" />
+      </div>
+      <div className="flexRow sb addressinfo">
+        {!adr.edit ? (
+          <div style={{ width: "100%" }}>
+            <div className="addressDetail">
+              <div>
+                <span className="addressName">{adr.name}</span>
+                <span className="addressType">{adr.addressType}</span>
+                <span className="addressMobileNumber">{adr.mobileNumber}</span>
+              </div>
+              {adr.selected && (
+                <Anchor
+                  name="EDIT"
+                  onClick={() => enableAddressEditForm(adr)}
+                  style={{
+                    fontWeight: "500",
+                    color: "#2874f0",
+                  }}
+                />
+              )}
+            </div>
+            <div className="fullAddress">
+              {adr.address} <br /> {`${adr.state} - ${adr.pinCode}`}
+            </div>
+            {adr.selected && (
+              <MaterialButton
+                title="DELIVERY HERE"
+                onClick={() => confirmDeliveryAddress(adr)}
+                style={{
+                  width: "200px",
+                  margin: "10px 0",
+                }}
+              />
+            )}
+          </div>
+        ) : (
+          <AddressForm withoutLayout={true} onSubmitForm={onAddressSubmit} initialData={adr} onCancel={() => {}} />
+        )}
+      </div>
+    </div>
+  );
+};
+
 const CheckoutPage = (props) => {
   const user = useSelector((state) => state.user);
   const auth = useSelector((state) => state.auth);
+  const cart = useSelector((state) => state.cart);
 
   const [newAddress, setNewAddress] = useState(false);
   const [address, setAddress] = useState([]);
   const [confirmAddress, setConfirmAddress] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [orderSummary, setOderSummary] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -42,6 +94,7 @@ const CheckoutPage = (props) => {
   const confirmDeliveryAddress = (addr) => {
     setSelectedAddress(addr);
     setConfirmAddress(true);
+    setOderSummary(true);
   };
 
   const enableAddressEditForm = (addr) => {
@@ -54,10 +107,12 @@ const CheckoutPage = (props) => {
   const onAddressSubmit = (addr) => {
     setSelectedAddress(addr);
     setConfirmAddress(true);
+    setOderSummary(true);
   };
 
   useEffect(() => {
     auth.authenticate && dispatch(getAddress());
+    auth.authenticate && dispatch(getCartItems());
   }, [auth.authenticate]);
 
   useEffect(() => {
@@ -98,54 +153,13 @@ const CheckoutPage = (props) => {
                   <div>{`${selectedAddress.address} - ${selectedAddress.pinCode}`}</div>
                 ) : (
                   address.map((adr) => (
-                    <div className="flexRow addressContainer">
-                      <div>
-                        <input onClick={() => selectAddress(adr)} name="address" type="radio" />
-                      </div>
-                      <div className="flexRow sb addressinfo">
-                        {!adr.edit ? (
-                          <div style={{ width: "100%" }}>
-                            <div className="addressDetail">
-                              <div>
-                                <span className="addressName">{adr.name}</span>
-                                <span className="addressType">{adr.addressType}</span>
-                                <span className="addressMobileNumber">{adr.mobileNumber}</span>
-                              </div>
-                              {adr.selected && (
-                                <Anchor
-                                  name="EDIT"
-                                  onClick={() => enableAddressEditForm(adr)}
-                                  style={{
-                                    fontWeight: "500",
-                                    color: "#2874f0",
-                                  }}
-                                />
-                              )}
-                            </div>
-                            <div className="fullAddress">
-                              {adr.address} <br /> {`${adr.state} - ${adr.pinCode}`}
-                            </div>
-                            {adr.selected && (
-                              <MaterialButton
-                                title="DELIVERY HERE"
-                                onClick={() => confirmDeliveryAddress(adr)}
-                                style={{
-                                  width: "200px",
-                                  margin: "10px 0",
-                                }}
-                              />
-                            )}
-                          </div>
-                        ) : (
-                          <AddressForm
-                            withoutLayout={true}
-                            onSubmitForm={onAddressSubmit}
-                            initialData={adr}
-                            onCancel={() => {}}
-                          />
-                        )}
-                      </div>
-                    </div>
+                    <Address
+                      selectAddress={selectAddress}
+                      enableAddressEditForm={enableAddressEditForm}
+                      confirmDeliveryAddress={confirmDeliveryAddress}
+                      onAddressSubmit={onAddressSubmit}
+                      adr={adr}
+                    />
                   ))
                 )}
               </>
@@ -155,16 +169,35 @@ const CheckoutPage = (props) => {
           {/* AddressForm */}
           {confirmAddress ? null : newAddress ? (
             <AddressForm onSubmitForm={onAddressSubmit} onCancel={() => {}} />
-          ) : (
-            <CheckoutStep active={false} stepNumber="+" title="ADD NEW ADDRESS" onClick={() => setNewAddress(true)} />
-          )}
+          ) : auth.authenticate ? (
+            <CheckoutStep
+              stepNumber={"+"}
+              title={"ADD NEW ADDRESS"}
+              active={false}
+              onClick={() => setNewAddress(true)}
+            />
+          ) : null}
 
-          <CheckoutStep stepNumber={"3"} title={"ORDER SUMMARY"} />
+          <CheckoutStep
+            stepNumber={"3"}
+            title={"ORDER SUMMARY"}
+            active={orderSummary}
+            body={orderSummary ? <CartPage onlyCartItems={true} /> : null}
+          />
 
           <CheckoutStep stepNumber={"4"} title={"PAYMENT OPTIONS"} />
         </div>
 
-        <Card headerLeft={"Price"} style={{ maxWidth: "380px" }}></Card>
+        {/* Price Component */}
+        <PriceDetails
+          totalItem={Object.keys(cart.cartItems).reduce(function (qty, key) {
+            return qty + cart.cartItems[key].qty;
+          }, 0)}
+          totalPrice={Object.keys(cart.cartItems).reduce((totalPrice, key) => {
+            const { price, qty } = cart.cartItems[key];
+            return totalPrice + price * qty;
+          }, 0)}
+        />
       </div>
     </Layout>
   );

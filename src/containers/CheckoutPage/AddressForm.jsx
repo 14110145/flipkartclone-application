@@ -4,35 +4,25 @@ import { addAddress } from "../../actions";
 import { MaterialButton, MaterialInput } from "../../components/MaterialUI";
 
 const AddressForm = (props) => {
-  const [name, setName] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [pinCode, setPinCode] = useState("");
-  const [locality, setLocality] = useState("");
-  const [address, setAddress] = useState("");
-  const [cityDistrictTown, setCityDistrictTown] = useState("");
-  const [state, setState] = useState("");
-  const [landmark, setLandmark] = useState("");
-  const [alternatePhone, setAlternatePhone] = useState("");
-  const [addressType, setAddressType] = useState("");
-  const [submitFlag, setSubmitFlag] = useState(false);
+  const { initialData } = props;
+  const [name, setName] = useState(initialData ? initialData.name : "");
+  const [mobileNumber, setMobileNumber] = useState(initialData ? initialData.mobileNumber : "");
+  const [pinCode, setPinCode] = useState(initialData ? initialData.pinCode : "");
+  const [locality, setLocality] = useState(initialData ? initialData.locality : "");
+  const [address, setAddress] = useState(initialData ? initialData.address : "");
+  const [cityDistrictTown, setCityDistrictTown] = useState(initialData ? initialData.cityDistrictTown : "");
+  const [state, setState] = useState(initialData ? initialData.state : "");
+  const [landmark, setLandmark] = useState(initialData ? initialData.landmark : "");
+  const [alternatePhone, setAlternatePhone] = useState(initialData ? initialData.alternatePhone : "");
+  const [addressType, setAddressType] = useState(initialData ? initialData.addressType : "");
   const dispatch = useDispatch();
-
   const user = useSelector((state) => state.user);
-
+  const [submitFlag, setSubmitFlag] = useState(false);
+  const [id, setId] = useState(initialData ? initialData._id : "");
   const inputContainer = {
     width: "100%",
     marginRight: 10,
   };
-
-  useEffect(() => {
-    console.log("addressCount:", user.addAddress);
-    if (submitFlag) {
-      console.log("where are we", user);
-      const address = user.adddress.slice(user.address.length - 1)[0];
-      props.onSubmitForm(address);
-    }
-  }, [user.address]);
-
   const onAddressSubmit = (e) => {
     const payload = {
       address: {
@@ -49,10 +39,37 @@ const AddressForm = (props) => {
       },
     };
     console.log(payload);
+    if (id) {
+      payload.address._id = id;
+    }
     dispatch(addAddress(payload));
     setSubmitFlag(true);
   };
-
+  useEffect(() => {
+    console.log("addressCount", user.address);
+    if (submitFlag) {
+      console.log("where are we", user);
+      let _address = {};
+      if (id) {
+        _address = {
+          _id: id,
+          name,
+          mobileNumber,
+          pinCode,
+          locality,
+          address,
+          cityDistrictTown,
+          state,
+          landmark,
+          alternatePhone,
+          addressType,
+        };
+      } else {
+        _address = user.address.slice(user.address.length - 1)[0];
+      }
+      props.onSubmitForm(_address);
+    }
+  }, [user.address]);
   const renderAddressForm = () => {
     return (
       <>
@@ -81,7 +98,6 @@ const AddressForm = (props) => {
             <MaterialInput label="Address" value={address} onChange={(e) => setAddress(e.target.value)} />
           </div>
         </div>
-
         <div className="flexRow">
           <div style={inputContainer}>
             <MaterialInput
@@ -132,7 +148,6 @@ const AddressForm = (props) => {
       </>
     );
   };
-
   if (props.withoutLayout) {
     return <div>{renderAddressForm()}</div>;
   }
@@ -157,5 +172,4 @@ const AddressForm = (props) => {
     </div>
   );
 };
-
 export default AddressForm;
