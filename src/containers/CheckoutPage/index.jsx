@@ -81,6 +81,8 @@ const CheckoutPage = (props) => {
   const [confirmAddress, setConfirmAddress] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [orderSummary, setOderSummary] = useState(false);
+  const [orderConfirmation, setOrderConfirmation] = useState(false);
+  const [paymentOption, setPaymentOption] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -108,6 +110,12 @@ const CheckoutPage = (props) => {
     setSelectedAddress(addr);
     setConfirmAddress(true);
     setOderSummary(true);
+  };
+
+  const userOrderConfirmation = () => {
+    setOrderConfirmation(true);
+    setOderSummary(false);
+    setPaymentOption(true);
   };
 
   useEffect(() => {
@@ -182,10 +190,21 @@ const CheckoutPage = (props) => {
             stepNumber={"3"}
             title={"ORDER SUMMARY"}
             active={orderSummary}
-            body={orderSummary ? <CartPage onlyCartItems={true} /> : null}
+            body={orderSummary ? <CartPage onlyCartItems={true} /> : orderConfirmation ? <div>Items</div> : null}
           />
 
-          <CheckoutStep stepNumber={"4"} title={"PAYMENT OPTIONS"} />
+          {orderSummary && (
+            <Card style={{ margin: "10px 0" }}>
+              <div className="flexRow sb" style={{ padding: "10px 20px" }}>
+                <p>
+                  Order confirmation email will be sent to <strong>{auth.user.email}</strong>
+                </p>
+                <MaterialButton title="CONTINUTE" style={{ width: "200px" }} onClick={userOrderConfirmation} />
+              </div>
+            </Card>
+          )}
+
+          <CheckoutStep stepNumber={"4"} title={"PAYMENT OPTIONS"} active={paymentOption} />
         </div>
 
         {/* Price Component */}
