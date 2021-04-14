@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAddress, getCartItems } from "../../actions";
+import { addOrder, getAddress, getCartItems } from "../../actions";
 import Layout from "../Layout";
 import { Anchor, MaterialButton, MaterialInput } from "../../components/MaterialUI";
 import Card from "../../components/UI/Card";
@@ -83,6 +83,7 @@ const CheckoutPage = (props) => {
   const [orderSummary, setOderSummary] = useState(false);
   const [orderConfirmation, setOrderConfirmation] = useState(false);
   const [paymentOption, setPaymentOption] = useState(false);
+  const [confirmOrder, setConfirmOrder] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -118,6 +119,27 @@ const CheckoutPage = (props) => {
     setPaymentOption(true);
   };
 
+  const onConfirmOrder = () => {
+    const totalAmount = Object.keys(cart.cartItems).reduce((totalPrice, key) => {
+      const { price, qty } = cart.cartItems[key];
+      return totalPrice + price * qty;
+    }, 0);
+    const items = Object.keys(cart.cartItems).map((key) => ({
+      productId: key,
+      payablePrice: cart.cartItems[key].price,
+      purchasedQty: cart.cartItems[key].qty,
+    }));
+    const payload = {
+      addressId: selectedAddress._id,
+      totalAmount,
+      items,
+      paymentStatus: "pending",
+    };
+    // console.log({ payload });
+    dispatch(addOrder(payload));
+    setConfirmOrder(true);
+  };
+
   useEffect(() => {
     auth.authenticate && dispatch(getAddress());
     auth.authenticate && dispatch(getCartItems());
@@ -127,6 +149,16 @@ const CheckoutPage = (props) => {
     const address = user.address.map((adr, index) => ({ ...adr, selected: false, edit: false }));
     setAddress(address);
   }, [user.address]);
+
+  if (confirmOrder) {
+    return (
+      <Layout>
+        <Card>
+          <div>Thank you.</div>
+        </Card>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -158,7 +190,7 @@ const CheckoutPage = (props) => {
             body={
               <>
                 {confirmAddress ? (
-                  <div>{`${selectedAddress.address} - ${selectedAddress.pinCode}`}</div>
+                  <div className="stepCompleted">{`${selectedAddress.name} - ${selectedAddress.address} - ${selectedAddress.pinCode}`}</div>
                 ) : (
                   address.map((adr) => (
                     <Address
@@ -190,7 +222,13 @@ const CheckoutPage = (props) => {
             stepNumber={"3"}
             title={"ORDER SUMMARY"}
             active={orderSummary}
-            body={orderSummary ? <CartPage onlyCartItems={true} /> : orderConfirmation ? <div>Items</div> : null}
+            body={
+              orderSummary ? (
+                <CartPage onlyCartItems={true} />
+              ) : orderConfirmation ? (
+                <div className="stepCompleted">Items</div>
+              ) : null
+            }
           />
 
           {orderSummary && (
@@ -204,7 +242,22 @@ const CheckoutPage = (props) => {
             </Card>
           )}
 
-          <CheckoutStep stepNumber={"4"} title={"PAYMENT OPTIONS"} active={paymentOption} />
+          <CheckoutStep
+            stepNumber={"4"}
+            title={"PAYMENT OPTIONS"}
+            active={paymentOption}
+            body={
+              paymentOption && (
+                <div className="stepCompleted">
+                  <div className="flexRow" style={{}}>
+                    <input type="radio" name="paymentOption" value="cod" />
+                    <div>Cash on delivery</div>
+                  </div>
+                  <MaterialButton title="CONFIRM ORDER" style={{ width: "200px" }} onClick={onConfirmOrder} />
+                </div>
+              )
+            }
+          />
         </div>
 
         {/* Price Component */}
