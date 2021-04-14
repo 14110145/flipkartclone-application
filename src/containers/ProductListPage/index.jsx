@@ -1,6 +1,7 @@
 import React from "react";
 import getParams from "../../utils/getParams";
 import Layout from "../Layout";
+import ClothingAndAccessories from "./ClothingAndAccessories";
 import ProductPage from "./ProductPage";
 import ProductStore from "./ProductStore";
 import "./style.css";
@@ -15,6 +16,9 @@ const ProductListPage = (props) => {
         break;
       case "page":
         content = <ProductPage {...props} />;
+      default:
+        content = <ClothingAndAccessories {...props} />;
+        break;
     }
     return content;
   };
