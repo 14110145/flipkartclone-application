@@ -3,6 +3,7 @@ import { userConstants } from "../actions/constants";
 const initState = {
   address: [],
   orders: [],
+  orderDetails: [],
   loading: false,
   orderFetching: false,
   error: null,
@@ -47,6 +48,16 @@ export default (state = initState, action) => {
       break;
     case userConstants.GET_USER_ORDER_FAILURE:
       state = { ...state, orderFetching: false, error: action.payload.error };
+      break;
+    case userConstants.GET_USER_ORDER_DETAILS_REQUEST:
+      break;
+    case userConstants.GET_USER_ORDER_DETAILS_SUCCESS:
+      state = {
+        ...state,
+        orderDetails: action.payload.order,
+      };
+      break;
+    case userConstants.GET_USER_ORDER_DETAILS_FAILURE:
       break;
   }
 
