@@ -4,14 +4,12 @@ import { Link } from "react-router-dom";
 import { getProductBySlug } from "../../../actions";
 import { generatePublicUrl } from "../../../urlConfig";
 import Card from "../../../components/UI/Card";
+import Rating from "../../../components/UI/Rating";
+import Price from "../../../components/UI/Price";
 
 const ProductStore = (props) => {
   const product = useSelector((state) => state.product);
-  const [priceRange, setPriceRange] = useState({
-    under500: 500,
-    under1k: 1000,
-    under2k: 2000,
-  });
+  const { priceRange } = product;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,23 +23,33 @@ const ProductStore = (props) => {
         return (
           <Card
             headerLeft={`${props.match.params.slug} mobile under ${priceRange[key]}`}
-            headerRight={<button>View all</button>}
+            headerRight={
+              <button
+                className="materialButton"
+                style={{ width: "100px", padding: "10px 0", backgroundColor: "#2874f0" }}
+              >
+                View all
+              </button>
+            }
             style={{ width: "calc(100% - 40px)", margin: "20px" }}
             key={index}
           >
             <div style={{ display: "flex" }}>
               {product.productsByPrice[key].map((product, index) => {
                 return (
-                  <Link key={index} to={`/${product.slug}/${product._id}/p`} className="productContainer">
+                  <Link
+                    style={{ textDecoration: "none" }}
+                    key={index}
+                    to={`/${product.slug}/${product._id}/p`}
+                    className="productContainer"
+                  >
                     <div className="productImgContainer">
                       <img src={generatePublicUrl(product.productPictures[0].img)} alt="" />
                     </div>
                     <div className="productInfo">
                       <div>{product.name}</div>
-                      <div>
-                        <span>4.3</span> <span>3200</span>
-                      </div>
-                      <div className="productPrice">{product.price}</div>
+                      <Rating value="4.4" ratingCount={452} />
+                      <Price value={product.price} />
                     </div>
                   </Link>
                 );

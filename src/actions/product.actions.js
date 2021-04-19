@@ -10,7 +10,7 @@ export const getProductBySlug = (slug) => {
         payload: { data: res.data },
       });
     } else {
-      // dispatch({type})
+      console.log("Cant get product by slug");
     }
   };
 };

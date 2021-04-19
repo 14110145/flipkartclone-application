@@ -36,7 +36,9 @@ const CartItem = (props) => {
           <button onClick={onQuantityIncSet}>+</button>
         </div>
         <button className="cartActionBtn">Save for later</button>
-        <button className="cartActionBtn">Remove</button>
+        <button className="cartActionBtn" onClick={() => props.onRemoveCartItem(_id)}>
+          Remove
+        </button>
       </div>
     </div>
   );

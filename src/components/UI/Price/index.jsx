@@ -1,11 +1,6 @@
 import React from "react";
 import { BiRupee } from "react-icons/bi";
 
-/**
- * @author
- * @function Price
- **/
-
 const Price = (props) => {
   return (
     <div

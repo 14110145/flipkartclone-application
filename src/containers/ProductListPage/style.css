@@ -2,6 +2,11 @@
   width: 200px;
   margin: 0 10px;
 }
+.productContainer:link,
+.productContainer:visited {
+  color: black;
+}
+
 .productContainer .productImgContainer {
   width: 150px;
   height: 150px;

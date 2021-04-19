@@ -5,13 +5,9 @@ import goldenStar from "../../images/logo/golden-star.png";
 import { IoIosArrowDown, IoIosCart, IoIosSearch } from "react-icons/io";
 import { Modal, MaterialInput, MaterialButton, DropdownMenu } from "../MaterialUI";
 import { useDispatch, useSelector } from "react-redux";
-import { login, signout } from "../../actions/auth.actions";
+import { login, signout, signup as _signup } from "../../actions/auth.actions";
 import { Link } from "react-router-dom";
-
-/**
- * @author
- * @function Header
- **/
+import Cart from "../UI/Cart";
 
 const Header = (props) => {
   const [loginModal, setLoginModal] = useState(false);
@@ -21,16 +17,30 @@ const Header = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const auth = useSelector((state) => state.auth);
+  const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
+  console.log(Object.keys(cart.cartItems).length);
   useEffect(() => {
     if (auth.authenticate) {
       setLoginModal(false);
     }
   }, [auth.authenticate]);
 
+  const userSignup = () => {
+    const user = { firstName, lastName, email, password };
+    if (firstName === "" || lastName === "" || email === "" || password === "") {
+      return;
+    }
+    dispatch(_signup(user));
+  };
+
   const userLogin = () => {
-    dispatch(login({ email, password }));
+    if (signup) {
+      userSignup();
+    } else {
+      dispatch(login({ email, password }));
+    }
   };
 
   const logout = () => {
@@ -148,7 +158,7 @@ const Header = (props) => {
                   rightElement={<a href="#">Forgot?</a>}
                 />
                 <MaterialButton
-                  title="Login"
+                  title={signup ? "Register" : "Login"}
                   bgColor="#fb641b"
                   textColor="#ffffff"
                   style={{ margin: "20px 0" }}
@@ -218,7 +228,7 @@ const Header = (props) => {
           />
           <div>
             <Link to="/cart" className="cart">
-              <IoIosCart />
+              <Cart count={Object.keys(cart.cartItems).length} />
               <span style={{ margin: "0 10px" }}>Cart</span>
             </Link>
           </div>
